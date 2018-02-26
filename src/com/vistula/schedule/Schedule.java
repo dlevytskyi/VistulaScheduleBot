@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class Schedule {
 
-    public static String getSchedule() throws Exception{
+    public static String getSchedule(String group) throws Exception{
 
         String schedule = "";
 
@@ -28,9 +28,14 @@ public class Schedule {
             final HtmlPage formPage = studentsGroup.click();
 
             final HtmlSelect selectGroup = (HtmlSelect) formPage.getElementById("dlObject");
-            final HtmlOption optionGroup = selectGroup.getOptionByValue("4852");
-            selectGroup.setSelectedAttribute(optionGroup, true);
-
+            if(group.equals("group 2")) {
+                final HtmlOption optionGroup = selectGroup.getOptionByValue("4852");
+                selectGroup.setSelectedAttribute(optionGroup, true);
+            }
+            else if(group.equals("group 1")) {
+                final HtmlOption optionGroup = selectGroup.getOptionByValue("4851");
+                selectGroup.setSelectedAttribute(optionGroup, true);
+            }
             final HtmlSelect selectTime = (HtmlSelect) formPage.getElementById("lbWeeks");
             final HtmlOption optionTime = selectTime.getOptionByValue("22-52");
             selectTime.setSelectedAttribute(optionTime, true);
@@ -48,7 +53,7 @@ public class Schedule {
 
     public static java.io.File convertToImg(String html){
 
-        File file = new File("test.png");
+        File file = new File("Schedule.png");
 
         try {
             Pdfcrowd.HtmlToImageClient client = new Pdfcrowd.HtmlToImageClient("dislike", "4bd0f148d0ef83a69dca46c25450a7ef");

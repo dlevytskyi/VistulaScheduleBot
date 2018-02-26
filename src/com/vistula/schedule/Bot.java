@@ -8,9 +8,15 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bot extends TelegramLongPollingBot{
 
@@ -20,7 +26,6 @@ public class Bot extends TelegramLongPollingBot{
         Bot bot = new Bot();
         try{
             telegramBotsApi.registerBot(bot);
-            System.out.println(Schedule.getSchedule());
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -31,16 +36,36 @@ public class Bot extends TelegramLongPollingBot{
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
+        String group = "";
 
         if(message != null && message.hasText()){
-            if (message.getText().equals("/schedule")){
+            if(message.getText().equals("/start")){
+                sendMsg(message, "Welcome to Vistula Schedule Bot. \n" +
+                        "To get your schedule type: \n/schedule");
+            }
+            else if (message.getText().equals("/schedule")){
+                selectYourGroup(message);
+            }
+            else if (message.getText().equals("group 1")){
+                group = "group 1";
                 try {
-                    sendDoc(message,Schedule.convertToImg(Schedule.getSchedule()));
+                    sendMsg(message, "Please weit a few seconds, \nwe are getting your schedule");
+                    sendDoc(message,Schedule.convertToImg(Schedule.getSchedule(group)), "Your Schedule");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if (message.getText().equals("group 2")){
+                group = "group 2";
+                try {
+                    sendMsg(message, "Please weit a few seconds, \nwe are getting your schedule");
+                    sendDoc(message,Schedule.convertToImg(Schedule.getSchedule(group)), "Your Schedule");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             else {
+                sendMsg(message, message.getText());
                 sendMsg(message, "How are you?");
             }
         }
@@ -70,13 +95,42 @@ public class Bot extends TelegramLongPollingBot{
         }
     }
 
-    private void sendDoc (Message message, java.io.File save) throws TelegramApiException{
+    private void sendDoc (Message message, java.io.File save, String caption) throws TelegramApiException{
 
         SendDocument sendDocument = new SendDocument();
         sendDocument.setChatId(message.getChatId().toString());
         sendDocument.setNewDocument(save);
-        sendDocument.setCaption("Your Schedule");
+        sendDocument.setCaption(caption);
         sendDocument(sendDocument);
+    }
+
+    private void sendImg (Message message, java.io.File file, String caption) throws  TelegramApiException{
+
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(message.getChatId().toString());
+        sendPhoto.setNewPhoto(file);
+        sendPhoto.setCaption(caption);
+        sendPhoto(sendPhoto);
+    }
+
+    public void selectYourGroup(Message message){
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add("group 1");
+        row.add("group 2");
+        keyboard.add(row);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        SendMessage sendMessage = new SendMessage().setChatId(message.getChatId().toString()).setText("Select your group");
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        try {
+            sendMessage(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
 
