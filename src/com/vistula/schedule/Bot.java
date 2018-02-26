@@ -49,7 +49,7 @@ public class Bot extends TelegramLongPollingBot{
             else if (message.getText().equals("group 1")){
                 group = "group 1";
                 try {
-                    sendMsg(message, "Please weit a few seconds, \nwe are getting your schedule");
+                    sendMsg(message, "Please wait a few seconds, \nwe are getting your schedule");
                     sendDoc(message,Schedule.convertToImg(Schedule.getSchedule(group)), "Your Schedule");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -58,7 +58,7 @@ public class Bot extends TelegramLongPollingBot{
             else if (message.getText().equals("group 2")){
                 group = "group 2";
                 try {
-                    sendMsg(message, "Please weit a few seconds, \nwe are getting your schedule");
+                    sendMsg(message, "Please wait a few seconds, \nwe are getting your schedule");
                     sendDoc(message,Schedule.convertToImg(Schedule.getSchedule(group)), "Your Schedule");
                 } catch (Exception e) {
                     e.printStackTrace();
