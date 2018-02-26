@@ -9,6 +9,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 import com.pdfcrowd.Pdfcrowd;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class Schedule {
 
     public static String getSchedule() throws Exception{
@@ -35,25 +40,30 @@ public class Schedule {
             final HtmlPage schedulePage = sumbitButton.click();
 
             final WebResponse response = schedulePage.getWebResponse();
-            schedule = schedulePage.getTitleText();
+            schedule = response.getContentAsString();
         }
-
 
         return schedule;
     }
 
-    public static byte[] convertToImg(String html){
+    public static java.io.File convertToImg(String html){
 
-        byte[] img = null;
+        File file = new File("test.png");
 
         try {
             Pdfcrowd.HtmlToImageClient client = new Pdfcrowd.HtmlToImageClient("dislike", "4bd0f148d0ef83a69dca46c25450a7ef");
             client.setOutputFormat("png");
-            img = client.convertString(html);
+            FileOutputStream output_stream = new FileOutputStream(file);
+            client.convertStringToStream(html, output_stream);
+            output_stream.close();
         }
         catch(Pdfcrowd.Error e) {
             System.err.println("Pdfcrowd Error: " + e);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return img;
+        return file;
     }
 }

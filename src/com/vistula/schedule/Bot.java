@@ -3,6 +3,7 @@ package com.vistula.schedule;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
@@ -34,7 +35,7 @@ public class Bot extends TelegramLongPollingBot{
         if(message != null && message.hasText()){
             if (message.getText().equals("/schedule")){
                 try {
-                    sendMsg(message, Schedule.getSchedule());
+                    sendDoc(message,Schedule.convertToImg(Schedule.getSchedule()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -67,6 +68,15 @@ public class Bot extends TelegramLongPollingBot{
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendDoc (Message message, java.io.File save) throws TelegramApiException{
+
+        SendDocument sendDocument = new SendDocument();
+        sendDocument.setChatId(message.getChatId().toString());
+        sendDocument.setNewDocument(save);
+        sendDocument.setCaption("Your Schedule");
+        sendDocument(sendDocument);
     }
 
 
