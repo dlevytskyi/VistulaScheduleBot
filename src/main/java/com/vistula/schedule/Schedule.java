@@ -13,9 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * Created by User on 27-Feb-18.
- */
+
 public class Schedule {
 
     public static String getSchedule(String group) throws Exception{

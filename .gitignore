@@ -19,6 +19,9 @@ buildNumber.properties
 *.iws
 build-idea/
 
+#png
+Schedule.png
+
 # testing stuff
 **/.local*
 .vagrant/
