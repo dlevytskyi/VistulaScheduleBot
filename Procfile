@@ -1,0 +1,1 @@
+worker: java -jar target/vistula-schedule-bot-1.0-SNAPSHOT.jar
